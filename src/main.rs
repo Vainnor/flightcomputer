@@ -1,6 +1,10 @@
-use clap::{Parser, Subcommand};
+use clap::{Parser, Subcommand, ValueEnum};
 
-/// A powerful file processing tool
+use crate::GasType::{AvGas, JetA};
+
+const AVGAS_WEIGHT: f32 = 6.0;
+const JETA_WEIGHT: f32 = 6.7;
+
 #[derive(Parser)]
 #[command(name = "flightcomputer")]
 #[command(author = "Vainnor")]
@@ -13,6 +17,12 @@ struct Cli {
 
     #[command(subcommand)]
     command: Commands,
+}
+
+#[derive(ValueEnum, Clone)]
+enum GasType {
+    AvGas,
+    JetA,
 }
 
 #[derive(Subcommand)]
@@ -41,6 +51,15 @@ enum Commands {
         /// Time
         time: f32,
     },
+    /// Calculate fuel burn given duration, fuel burn rate, and gas type
+    Fuel {
+        ///Duration
+        duration: f32,
+
+        /// Fuel Per Hour
+        fuel_per_hour: f32,
+        gas_type: GasType,
+    },
 }
 
 fn main() {
@@ -57,6 +76,11 @@ fn main() {
         } => calculate_duration(distance, ground_speed),
         Commands::Speed { distance, time } => calculate_ground_speed(distance, time),
         Commands::Distance { ground_speed, time } => calculate_distance(ground_speed, time),
+        Commands::Fuel {
+            duration,
+            fuel_per_hour,
+            gas_type,
+        } => calculate_fuel_burn(duration, fuel_per_hour, gas_type),
     }
 }
 
@@ -78,4 +102,21 @@ fn calculate_ground_speed(distance: f32, time: f32) {
 
 fn calculate_distance(ground_speed: f32, time: f32) {
     println!("Distance: {} NM", ground_speed * time)
+}
+
+fn calculate_fuel_burn(duration: f32, fuel_per_hour: f32, gas_type: GasType) {
+    let gas_weight: f32;
+
+    match gas_type {
+        AvGas => gas_weight = AVGAS_WEIGHT,
+        JetA => gas_weight = JETA_WEIGHT,
+    }
+
+    let gal: f32 = duration * fuel_per_hour;
+    let lbs = gal * gas_weight;
+
+    print!(
+        "Fuel Burn: {} GAL - {} LBS @{} LBS/GAL ",
+        gal, lbs, gas_weight
+    )
 }

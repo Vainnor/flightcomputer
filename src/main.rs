@@ -5,7 +5,7 @@ use clap::{Parser, Subcommand};
 #[command(name = "flightcomputer")]
 #[command(author = "Vainnor")]
 #[command(version = "0.1.0")]
-#[command(about = "COMPUTE THINGS!", long_about = None)]
+#[command(about = "COMPUTE FLIGHT THINGS!", long_about = None)]
 struct Cli {
     /// Enable verbose output
     #[arg(short, long)]
@@ -23,8 +23,15 @@ enum Commands {
         distance: f32,
 
         /// Ground Speed
-        #[arg(value_name = "GROUND SPEED")]
         ground_speed: f32,
+    },
+    /// Calculate speed when given distance and time
+    Speed {
+        /// Total Distance
+        distance: f32,
+
+        /// Time
+        time: f32,
     },
 }
 
@@ -40,6 +47,7 @@ fn main() {
             distance,
             ground_speed,
         } => calculate_duration(distance, ground_speed),
+        Commands::Speed { distance, time } => calculate_speed(distance, time),
     }
 }
 
@@ -48,5 +56,13 @@ fn calculate_duration(distance: f32, ground_speed: f32) {
         panic!("You won't go anywhere at 0 Knots!")
     } else {
         println!("Duration: {} HR(s)", distance / ground_speed)
+    }
+}
+
+fn calculate_speed(distance: f32, time: f32) {
+    if time == 0 as f32 {
+        panic!("You cannot go somewhere in no time")
+    } else {
+        println!("Speed: {} KT(s)", distance / time)
     }
 }

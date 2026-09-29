@@ -17,7 +17,7 @@ struct Cli {
 
 #[derive(Subcommand)]
 enum Commands {
-    /// Calculate time for a given distance at a given speed
+    /// Calculate time for a given distance at a given ground speed
     Duration {
         /// Total Distance
         distance: f32,
@@ -25,10 +25,18 @@ enum Commands {
         /// Ground Speed
         ground_speed: f32,
     },
-    /// Calculate speed when given distance and time
+    /// Calculate ground speed when given distance and time
     Speed {
         /// Total Distance
         distance: f32,
+
+        /// Time
+        time: f32,
+    },
+    /// Calculate distance given ground speed and time
+    Distance {
+        /// Ground Speed
+        ground_speed: f32,
 
         /// Time
         time: f32,
@@ -47,7 +55,8 @@ fn main() {
             distance,
             ground_speed,
         } => calculate_duration(distance, ground_speed),
-        Commands::Speed { distance, time } => calculate_speed(distance, time),
+        Commands::Speed { distance, time } => calculate_ground_speed(distance, time),
+        Commands::Distance { ground_speed, time } => calculate_distance(ground_speed, time),
     }
 }
 
@@ -59,10 +68,14 @@ fn calculate_duration(distance: f32, ground_speed: f32) {
     }
 }
 
-fn calculate_speed(distance: f32, time: f32) {
+fn calculate_ground_speed(distance: f32, time: f32) {
     if time == 0 as f32 {
         panic!("You cannot go somewhere in no time")
     } else {
-        println!("Speed: {} KT(s)", distance / time)
+        println!("Speed: {} KT(s) (GS)", distance / time)
     }
+}
+
+fn calculate_distance(ground_speed: f32, time: f32) {
+    println!("Distance: {} NM", ground_speed * time)
 }

@@ -23,3 +23,11 @@ A flight calculator able to calculate:
 ```bash
 flightcomputer dur <dist> <gs> -> Time 0.5 HR(s)
 ```
+
+# What to do for day 2?
+
+const AVGAS_WEIGHT: f32 = 6.0;
+const JETA_WEIGHT: f32 = 6.7;
+
+add the ability to custiomize these values ^
+implement wind calculations?

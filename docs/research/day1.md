@@ -14,3 +14,12 @@ A flight calculator able to calculate:
 
 # MVP 
 - CLI tool that can calculate Time, speed, distance, fuel consumption and a few other metrics
+
+# Rust specifics
+- Clap for CLI specifics
+
+# CLI functionality
+
+```bash
+flightcomputer dur <dist> <gs> -> Time 0.5 HR(s)
+```
